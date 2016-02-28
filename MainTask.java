@@ -4,10 +4,10 @@ import java.text.SimpleDateFormat;
 
 public class MainTask {
 	public static void main(String[] args) throws Exception {
-		TimePair defaultNotificationDatePair = new TimePair(DateUnity.DAY, 1);
+		TimePair defaultNotificationDatePair = new TimePair(DateUnity.MINUTE, 1);
 		TimePair defaultRepeatIntervalPair = new TimePair(DateUnity.MINUTE, 1);
 		TaskManager tm = new TaskManager(defaultNotificationDatePair, true, defaultRepeatIntervalPair);
-		tm.addTask("Teste1", "Teste", "Mar 1 2015 16:02", "", false, defaultRepeatIntervalPair);
+		tm.addTask("Teste1", "Teste", "", "", false, defaultRepeatIntervalPair);
 		System.out.println(tm.toString());
 	}
 }

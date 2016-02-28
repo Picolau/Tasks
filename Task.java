@@ -4,14 +4,15 @@ public class Task {
 	private Calendar creationDate; // *
 	private Calendar completionDate; // required
 	private Calendar notificationDate; // required
+	private Calendar nextNotificationDate;
 	private boolean repeatNotifications; // required
-	private long repeatInterval; // required in case repeatNotifications == true
+	private TimePair repeatInterval; // required in case repeatNotifications == true
 
 	private String name; // required
 	private String description; // optional
 
 	public Task(String name, String description, Calendar completionDate, Calendar notificationDate, 
-				boolean repeatNotifications, long repeatInterval) {
+				boolean repeatNotifications, TimePair repeatInterval) {
 		this.creationDate = Calendar.getInstance();
 		this.completionDate = completionDate;
 		this.notificationDate = notificationDate;
@@ -19,6 +20,13 @@ public class Task {
 		this.repeatInterval = repeatInterval;
 		this.name = name;
 		this.description = description;
+
+		this.nextNotificationDate = Calendar.getInstance();
+		this.nextNotificationDate.set(Calendar.MINUTE, notificationDate.get(Calendar.MINUTE));
+		this.nextNotificationDate.set(Calendar.HOUR_OF_DAY, notificationDate.get(Calendar.HOUR_OF_DAY));
+		this.nextNotificationDate.set(Calendar.DAY_OF_MONTH, notificationDate.get(Calendar.DAY_OF_MONTH));
+		this.nextNotificationDate.set(Calendar.MONTH, notificationDate.get(Calendar.MONTH));
+		this.nextNotificationDate.set(Calendar.YEAR, notificationDate.get(Calendar.YEAR));
 	}
 
 	public Calendar getCreationDate() {
@@ -33,11 +41,11 @@ public class Task {
 		return this.notificationDate;
 	}
 
-	public boolean repeatNotifications () {
-		return this.repeatNotifications;
+	public Calendar getNextNotificationDate() {
+		return this.nextNotificationDate;
 	}
 
-	public long getRepeatInterval() {
+	public TimePair getRepeatInterval() {
 		return this.repeatInterval;
 	}
 
@@ -57,8 +65,25 @@ public class Task {
 		this.description = description;
 	}
 
-	public void setRepeatInterval(long repeatInterval) {
-		this.repeatInterval = repeatInterval;
+	public void setRepeatInterval(TimePair newRepeatInterval) {
+		switch (newRepeatInterval.getDateUnity()) {
+			case MINUTE:
+				nextNotificationDate.add(Calendar.MINUTE, newRepeatInterval.getIncrementer() - this.repeatInterval.getIncrementer());
+			break;
+			case HOUR:
+				nextNotificationDate.add(Calendar.HOUR_OF_DAY, newRepeatInterval.getIncrementer() - this.repeatInterval.getIncrementer());
+			break;
+			case DAY:
+				nextNotificationDate.add(Calendar.DAY_OF_MONTH, newRepeatInterval.getIncrementer() - this.repeatInterval.getIncrementer());
+			break;
+			case WEEK:
+				nextNotificationDate.add(Calendar.DAY_OF_MONTH, 7*(newRepeatInterval.getIncrementer() - this.repeatInterval.getIncrementer()));
+			break;
+			case MONTH:
+				nextNotificationDate.add(Calendar.MONTH, newRepeatInterval.getIncrementer() - this.repeatInterval.getIncrementer());
+			break;
+		}
+		this.repeatInterval = newRepeatInterval;
 	}
 
 	public void setNotificationDate(Calendar notificationDate) {
@@ -73,8 +98,28 @@ public class Task {
 		this.repeatNotifications = repeatNotifications;
 	}
 
+	public void updateNextNotificationDate() {
+		switch (this.repeatInterval.getDateUnity()) {
+			case MINUTE:
+				nextNotificationDate.add(Calendar.MINUTE, this.repeatInterval.getIncrementer());
+			break;
+			case HOUR:
+				nextNotificationDate.add(Calendar.HOUR_OF_DAY, this.repeatInterval.getIncrementer());
+			break;
+			case DAY:
+				nextNotificationDate.add(Calendar.DAY_OF_MONTH, this.repeatInterval.getIncrementer());
+			break;
+			case WEEK:
+				nextNotificationDate.add(Calendar.DAY_OF_MONTH, 7*(this.repeatInterval.getIncrementer()));
+			break;
+			case MONTH:
+				nextNotificationDate.add(Calendar.MONTH, this.repeatInterval.getIncrementer());
+			break;
+		}
+	}
+
 	public boolean isReminder() {
-		return this.completionDate == null;
+		return this.repeatNotifications && nextNotificationDate.compareTo(completionDate) < 0;
 	}
 
 	@Override

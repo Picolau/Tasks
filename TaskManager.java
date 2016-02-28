@@ -4,14 +4,27 @@ import java.util.Locale;
 import java.text.SimpleDateFormat;
 
 public class TaskManager {
-	private class TasksListener implements Runnable {
-		
+	private class TaskListener implements Runnable {
 		@Override
 		public void run () {
-			
+			while (true){
+				Calendar now = Calendar.getInstance();
+				for (Task task : tasks){
+					if (task.isReminder()){
+						if (task.getNextNotificationDate().compareTo(now) <= 0) {
+							System.out.println("Tarefa a comprir: " + task.toString());
+							task.updateNextNotificationDate();
+						}
+					}
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e){
+					System.err.println("Deu ruim no sleep da Thread");
+				}
+			}
 		}
 	}
-
 
 	private ArrayList<Task> tasks;
 	private TimePair defaultNotificationDatePair;
@@ -22,13 +35,14 @@ public class TaskManager {
 		this.tasks = new ArrayList<>();
 		this.defaultNotificationDatePair = defaultNotificationDatePair;
 		this.defaultRepeatNotifications = defaultRepeatNotifications;
-		this.defaultRepeatIntervalPair = defaultRepeatIntervalPair;	
+		this.defaultRepeatIntervalPair = defaultRepeatIntervalPair;
+		
+		TaskListener taskListener = new TaskListener();
+		new Thread(taskListener).start();
 	}
 
 	public void addTask(String name, String description, String strCompletionDate, String strNotificationDate, 
 						boolean repeatNotifications, TimePair repeatIntervalPair) {
-
-
 		Calendar completionDate = getCalendarFrom(strCompletionDate);
 		Calendar notificationDate = getCalendarFrom(strNotificationDate);
 
@@ -46,7 +60,7 @@ public class TaskManager {
 						notificationDate.add(Calendar.MINUTE, defaultNotificationDatePair.getIncrementer()); 
 					break;
 					case HOUR : 
-						notificationDate.add(Calendar.HOUR, defaultNotificationDatePair.getIncrementer()); 
+						notificationDate.add(Calendar.HOUR_OF_DAY, defaultNotificationDatePair.getIncrementer()); 
 					break;
 					case DAY : 
 						notificationDate.add(Calendar.DAY_OF_MONTH, defaultNotificationDatePair.getIncrementer()); 
@@ -62,8 +76,7 @@ public class TaskManager {
 				repeatIntervalPair = defaultRepeatIntervalPair;
 			}
 		}
-		long repeatInterval = repeatIntervalPair.getMillis();
-		Task t = new Task(name, description, completionDate, notificationDate, repeatNotifications, repeatInterval);
+		Task t = new Task(name, description, completionDate, notificationDate, repeatNotifications, repeatIntervalPair);
 		tasks.add(t);
 	}
 
