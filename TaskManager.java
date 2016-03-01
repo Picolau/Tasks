@@ -18,7 +18,7 @@ public class TaskManager {
 					}
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(30000);
 				} catch (Exception e){
 					System.err.println("Deu ruim no sleep da Thread");
 				}
@@ -103,9 +103,3 @@ public class TaskManager {
 		return cal;
 	}
 }
-
-
-
-// SE DATA DE CRIAÇÃO == "" --> ASSUME QUE É UM REMINDER E PEGA A NOTIFICATION_DATE
-// SE DATA DE NOTIFICAÇÃO == "" --> ASSUME DATA DE NOTIFICAÇÃO DEFAULT(1 DIA APÓS A CRIAÇÃO), REPEATNOTIFICATIONS COMO TRUE E REPEAT INTERVAL COMO 1 DIA(DEFAULT)
-// SE DATA DE NOTIFICAÇAO != "" E REPEAT NOTIFICATIONS == TRUE E REPEATINTERVAL == 0 ASSUME REPEAT INTERVAL COMO 1 DIA(DEFAULT) 

@@ -29,6 +29,12 @@ public class Task {
 		this.nextNotificationDate.set(Calendar.YEAR, notificationDate.get(Calendar.YEAR));
 	}
 
+	public Task(String name, String description) {
+		this.creationDate = Calendar.getInstance();
+		this.name = name;
+		this.description = description;
+	}
+
 	public Calendar getCreationDate() {
 		return this.creationDate;
 	}
