@@ -1,6 +1,6 @@
 import java.util.Calendar;
 
-public class Task {
+public class Task extends Brainy {
 	private Calendar creationDate; // *
 	private Calendar completionDate; // required
 	private Calendar notificationDate; // required
@@ -27,12 +27,6 @@ public class Task {
 		this.nextNotificationDate.set(Calendar.DAY_OF_MONTH, notificationDate.get(Calendar.DAY_OF_MONTH));
 		this.nextNotificationDate.set(Calendar.MONTH, notificationDate.get(Calendar.MONTH));
 		this.nextNotificationDate.set(Calendar.YEAR, notificationDate.get(Calendar.YEAR));
-	}
-
-	public Task(String name, String description) {
-		this.creationDate = Calendar.getInstance();
-		this.name = name;
-		this.description = description;
 	}
 
 	public Calendar getCreationDate() {

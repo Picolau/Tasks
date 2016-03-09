@@ -41,8 +41,35 @@ public class TaskManager {
 		new Thread(taskListener).start();
 	}
 
-	public void addTask(String name, String description, String strCompletionDate, String strNotificationDate, 
-						boolean repeatNotifications, TimePair repeatIntervalPair) {
+	public void addTask(Task t) {
+		tasks.add(t);
+	}
+
+	@Override
+	public String toString() {
+		String toS = "";
+		for (Task task : tasks) {
+			toS += task.toString() + "\n" + "__________________________";
+		}
+		return toS;
+	}
+
+	private Calendar getCalendarFrom(String date) {
+		if (date == "") {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.ROOT);
+		try {
+			cal.setTime(sdf.parse(date)); // Mar 14 16:02:37 2011
+		} catch (Exception e){
+			System.err.println("Deu ruim no parser de data!");
+		}
+		return cal;
+	}
+
+	public static Task mountTask(String name, String description, String strCompletionDate, String strNotificationDate, 
+								boolean repeatNotifications, TimePair repeatIntervalPair){
 		Calendar completionDate = getCalendarFrom(strCompletionDate);
 		Calendar notificationDate = getCalendarFrom(strNotificationDate);
 
@@ -76,30 +103,6 @@ public class TaskManager {
 				repeatIntervalPair = defaultRepeatIntervalPair;
 			}
 		}
-		Task t = new Task(name, description, completionDate, notificationDate, repeatNotifications, repeatIntervalPair);
-		tasks.add(t);
-	}
-
-	@Override
-	public String toString() {
-		String toS = "";
-		for (Task task : tasks) {
-			toS += task.toString() + "\n" + "__________________________";
-		}
-		return toS;
-	}
-
-	private Calendar getCalendarFrom(String date) {
-		if (date == "") {
-			return null;
-		}
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.ROOT);
-		try {
-			cal.setTime(sdf.parse(date)); // Mar 14 16:02:37 2011
-		} catch (Exception e){
-			System.err.println("Deu ruim no parser de data!");
-		}
-		return cal;
+		return new Task(name, description, completionDate, notificationDate, repeatNotifications, repeatIntervalPair);
 	}
 }
