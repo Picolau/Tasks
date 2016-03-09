@@ -1,19 +1,18 @@
 import java.util.Calendar;
 
 public class Task extends Brainy {
-	private Calendar creationDate; // *
 	private Calendar completionDate; // required
 	private Calendar notificationDate; // required
 	private Calendar nextNotificationDate;
 	private boolean repeatNotifications; // required
 	private TimePair repeatInterval; // required in case repeatNotifications == true
 
-	private String name; // required
 	private String description; // optional
 
-	public Task(String name, String description, Calendar completionDate, Calendar notificationDate, 
+	public Task(Stirng name, String description, Calendar completionDate, Calendar notificationDate, 
 				boolean repeatNotifications, TimePair repeatInterval) {
-		this.creationDate = Calendar.getInstance();
+		super(name);
+
 		this.completionDate = completionDate;
 		this.notificationDate = notificationDate;
 		this.repeatNotifications = repeatNotifications;
@@ -27,10 +26,6 @@ public class Task extends Brainy {
 		this.nextNotificationDate.set(Calendar.DAY_OF_MONTH, notificationDate.get(Calendar.DAY_OF_MONTH));
 		this.nextNotificationDate.set(Calendar.MONTH, notificationDate.get(Calendar.MONTH));
 		this.nextNotificationDate.set(Calendar.YEAR, notificationDate.get(Calendar.YEAR));
-	}
-
-	public Calendar getCreationDate() {
-		return this.creationDate;
 	}
 
 	public Calendar getCompletionDate() {
@@ -49,16 +44,8 @@ public class Task extends Brainy {
 		return this.repeatInterval;
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
 	public String getDescription() {
 		return this.description;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public void setDescription(String description) {
@@ -118,6 +105,10 @@ public class Task extends Brainy {
 		}
 	}
 
+	public boolean done() {
+		return nextNotificationDate.compareTo(completionDate) > 0;
+	}
+
 	public boolean isReminder() {
 		return this.repeatNotifications && nextNotificationDate.compareTo(completionDate) < 0;
 	}
@@ -125,17 +116,16 @@ public class Task extends Brainy {
 	@Override
 	public String toString() {
 		String toS = "";
-		toS += "Creation date: " + dateToStr(this.creationDate) + "\n";
-		toS += "Name: " + this.name + "\n";
-		toS += "Description: " + this.description + "\n";
+		toS += "CREATION DATE: " + dateToStr(this.creationDate) + " - ";
+		toS += "NAME: " + this.name + " - ";
+		toS += "DESCRIPTION: " + this.description + " - ";
 		if (this.completionDate != null) {
-			toS += "Completion date: " + dateToStr(this.completionDate) + "\n";
+			toS += "COMPLETEION DATE: " + dateToStr(this.completionDate) + " - ";
 		}
 		if (this.notificationDate != null) {
-			toS += "Notification date: " + dateToStr(this.notificationDate) + "\n";
+			toS += "NOTIFICATION DATE: " + dateToStr(this.notificationDate) + " - ";
 		}
-		toS += "Repeat notifications: " + this.repeatNotifications + "\n";
-		toS += "Repeat interval: " + this.repeatInterval;
+		toS += "REPEAT INTERVAL: " + this.repeatInterval.getIncrementer() + " " + this.repeatInterval.getIncrementer();
 		return toS;
 	}
 
@@ -143,4 +133,24 @@ public class Task extends Brainy {
 		return String.valueOf(date.get(Calendar.MONTH)) + "/" + String.valueOf(date.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(date.get(Calendar.YEAR)) + 
  		" " + String.valueOf(date.get(Calendar.HOUR_OF_DAY)) + ":" + String.valueOf(date.get(Calendar.MINUTE));
 	}
+
+	/***********************************************************************BRAINY METHODS****************************************************************************/
+
+	public boolean isRepresentative() {
+		return false;
+	}
+
+	public void paint(Graphics g) {
+		//TODO
+	}
 }
+
+
+
+
+
+
+
+
+
+

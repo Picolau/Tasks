@@ -10,11 +10,9 @@ public class TaskManager {
 			while (true){
 				Calendar now = Calendar.getInstance();
 				for (Task task : tasks){
-					if (task.isReminder()){
-						if (task.getNextNotificationDate().compareTo(now) <= 0) {
-							System.out.println("Tarefa a comprir: " + task.toString());
-							task.updateNextNotificationDate();
-						}
+					if (task.isReminder() && !task.done()){
+						notificateUser();
+						task.updateNextNotificationDate();
 					}
 				}
 				try {
@@ -23,6 +21,10 @@ public class TaskManager {
 					System.err.println("Deu ruim no sleep da Thread");
 				}
 			}
+		}
+
+		private void notificateUser() {
+			System.out.println("Tarefa a comprir: " + task.toString());
 		}
 	}
 
@@ -43,6 +45,10 @@ public class TaskManager {
 
 	public void addTask(Task t) {
 		tasks.add(t);
+	}
+
+	public void removeTask(Task t){
+		tasks.remove(t);
 	}
 
 	@Override
