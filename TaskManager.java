@@ -10,20 +10,20 @@ public class TaskManager {
 			while (true){
 				Calendar now = Calendar.getInstance();
 				for (Task task : tasks){
-					if (task.isReminder() && !task.done()){
-						notificateUser();
+					if (now.compareTo(task.getNextNotificationDate()) >= 0 && task.isReminder() && !task.done()){
+						notificateUser(task);
 						task.updateNextNotificationDate();
 					}
 				}
 				try {
-					Thread.sleep(30000);
+					Thread.sleep(1000);
 				} catch (Exception e){
 					System.err.println("Deu ruim no sleep da Thread");
 				}
 			}
 		}
 
-		private void notificateUser() {
+		private void notificateUser(Task task) {
 			System.out.println("Tarefa a comprir: " + task.toString());
 		}
 	}
@@ -43,11 +43,11 @@ public class TaskManager {
 		new Thread(taskListener).start();
 	}
 
-	public void addTask(Task t) {
+	public void add(Task t) {
 		tasks.add(t);
 	}
 
-	public void removeTask(Task t){
+	public void remove(Task t){
 		tasks.remove(t);
 	}
 
@@ -74,7 +74,7 @@ public class TaskManager {
 		return cal;
 	}
 
-	public static Task mountTask(String name, String description, String strCompletionDate, String strNotificationDate, 
+	public Task mount(String name, String description, String strCompletionDate, String strNotificationDate, 
 								boolean repeatNotifications, TimePair repeatIntervalPair){
 		Calendar completionDate = getCalendarFrom(strCompletionDate);
 		Calendar notificationDate = getCalendarFrom(strNotificationDate);

@@ -1,3 +1,4 @@
+import java.awt.Graphics;
 import java.util.Calendar;
 
 public class Task extends Brainy {
@@ -9,7 +10,7 @@ public class Task extends Brainy {
 
 	private String description; // optional
 
-	public Task(Stirng name, String description, Calendar completionDate, Calendar notificationDate, 
+	public Task(String name, String description, Calendar completionDate, Calendar notificationDate, 
 				boolean repeatNotifications, TimePair repeatInterval) {
 		super(name);
 
@@ -17,7 +18,6 @@ public class Task extends Brainy {
 		this.notificationDate = notificationDate;
 		this.repeatNotifications = repeatNotifications;
 		this.repeatInterval = repeatInterval;
-		this.name = name;
 		this.description = description;
 
 		this.nextNotificationDate = Calendar.getInstance();
@@ -106,18 +106,21 @@ public class Task extends Brainy {
 	}
 
 	public boolean done() {
+		if (completionDate == null){
+			return false;
+		}
 		return nextNotificationDate.compareTo(completionDate) > 0;
 	}
 
 	public boolean isReminder() {
-		return this.repeatNotifications && nextNotificationDate.compareTo(completionDate) < 0;
+		return this.repeatNotifications;
 	}
 
 	@Override
 	public String toString() {
 		String toS = "";
-		toS += "CREATION DATE: " + dateToStr(this.creationDate) + " - ";
-		toS += "NAME: " + this.name + " - ";
+		toS += "CREATION DATE: " + dateToStr(this.getCreationDate()) + " - ";
+		toS += "NAME: " + this.getName() + " - ";
 		toS += "DESCRIPTION: " + this.description + " - ";
 		if (this.completionDate != null) {
 			toS += "COMPLETEION DATE: " + dateToStr(this.completionDate) + " - ";
@@ -136,10 +139,12 @@ public class Task extends Brainy {
 
 	/***********************************************************************BRAINY METHODS****************************************************************************/
 
+	@Override
 	public boolean isRepresentative() {
 		return false;
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		//TODO
 	}

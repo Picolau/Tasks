@@ -1,4 +1,8 @@
-public abstract class Brainy {
+import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class Brainy {
 	private Calendar creationDate;
 	private String name;
 
@@ -39,7 +43,18 @@ public abstract class Brainy {
 
 	@Override
 	public String toString() {
+		String toS = "MOTHER: " + this.name + "\n\n";
 
+		for (Brainy son : brainies) {
+			if (son.isRepresentative()){
+				toS += "Representative - ";
+			} else {
+				toS += "Task           - ";
+			}
+			toS += son.name + "\n";
+		}
+
+		return toS; 
 	}
 
 	public void paint(Graphics g){
@@ -50,3 +65,15 @@ public abstract class Brainy {
 		return true;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
