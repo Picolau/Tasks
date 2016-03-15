@@ -19,6 +19,20 @@ public class BrainyManager {
 		}
 	}
 
+	public void remove(Brainy brainy) {
+		currentMother.setFree(brainy);
+		if (!brainy.isRepresentative()){
+			Task taskFromBrainy = (Task) brainy;
+			taskManager.remove(taskFromBrainy);
+		}
+	}
+
+	public void setCurrentMother(Brainy brainy) {
+		if (brainy.isRepresentative()){
+			currentMother = brainy;
+		}
+	}
+
 	public Task mountTask(String name, String description, String strCompletionDate, String strNotificationDate, 
 								boolean repeatNotifications, TimePair repeatIntervalPair){
 		return taskManager.mount(name, description, strCompletionDate, strNotificationDate,

@@ -24,7 +24,7 @@ public class Brainy {
 		son.mother = this;
 	}
 
-	public void free(Brainy son) {
+	public void setFree(Brainy son) {
 		son.mother = null;
 		this.brainies.remove(son);
 	}
